@@ -1536,22 +1536,22 @@ end );
 ##
 InstallMethod( IndecProjectiveObjects,
           [ IsCapHomCategory ],
-  function ( Hom )
-    local A, pp, iso;
+  function ( H )
+    local A, A_oid_op, Y;
     
-    A := UnderlyingQuiverAlgebra( Source( Hom ) );
+    A := UnderlyingQuiverAlgebra( Source( H ) );
     
-    if not (IsMatrixCategory( Range( Hom ) ) and IsAdmissibleQuiverAlgebra( A )) then
+    if not (IsMatrixCategory( Range( H ) ) and IsAdmissibleQuiverAlgebra( A )) then
       
-      TryNextMethod();
+      TryNextMethod( );
       
     fi;
     
-    pp := IndecProjRepresentations( A );
+    A_oid_op := OppositeAlgebroidOverOppositeQuiverAlgebra( Source( H ) );
     
-    iso := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
+    Y := YonedaEmbedding( A_oid_op );
     
-    return List( pp, p -> ApplyFunctor( iso, p ) );
+    return List( SetOfObjects( A_oid_op ), o -> ApplyFunctor( Y, o ) );
     
 end );
 
