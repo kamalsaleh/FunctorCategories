@@ -1537,7 +1537,7 @@ end );
 InstallMethod( IndecProjectiveObjects,
           [ IsCapHomCategory ],
   function ( Hom )
-    local A, pp, iso;
+    local A, algebroid_op, Y;
     
     A := UnderlyingQuiverAlgebra( Source( Hom ) );
     
@@ -1547,11 +1547,11 @@ InstallMethod( IndecProjectiveObjects,
       
     fi;
     
-    pp := IndecProjRepresentations( A );
+    algebroid_op := OppositeAlgebroidOverOppositeQuiverAlgebra( Source( Hom ) );
     
-    iso := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
+    Y := YonedaEmbedding( algebroid_op );
     
-    return List( pp, p -> ApplyFunctor( iso, p ) );
+    return List( SetOfObjects( algebroid_op ), o -> ApplyFunctor( Y, o ) );
     
 end );
 
