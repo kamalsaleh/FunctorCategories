@@ -1231,96 +1231,28 @@ InstallMethodWithCache( Hom,
       SetIsAbelianCategoryWithEnoughInjectives( Hom, true );
       
       AddIsProjective( Hom,
-        function ( F )
-          local iso;
-          
-          iso := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          return IsProjectiveRepresentation( ApplyFunctor( iso, F ) );
-          
-      end );
+        F -> IsSplitEpimorphism( ProjectiveCover( F ) )
+      );
       
       AddIsInjective( Hom,
-        function ( F )
-          local iso;
-          
-          iso := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          return IsInjectiveRepresentation( ApplyFunctor( iso, F ) );
-          
-      end );
+        F -> IsSplitMonomorphism( InjectiveEnvelope( F ) )
+      );
       
       AddSomeProjectiveObject( Hom,
-        function ( F )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, SomeProjectiveObject( ApplyFunctor( iso_1, F ) ) );
-          
-      end );
+        F -> Source( ProjectiveCover( F ) )
+      );
       
       AddSomeInjectiveObject( Hom,
-        function ( F )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, SomeInjectiveObject( ApplyFunctor( iso_1, F ) ) );
-          
-      end );
+        F -> Range( InjectiveEnvelope( F ) )
+      );
       
       AddEpimorphismFromSomeProjectiveObject( Hom,
-        function ( F )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, EpimorphismFromSomeProjectiveObject( ApplyFunctor( iso_1, F ) ) );
-          
-      end );
+        ProjectiveCover
+      );
       
       AddMonomorphismIntoSomeInjectiveObject( Hom,
-        function ( F )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, MonomorphismIntoSomeInjectiveObject( ApplyFunctor( iso_1, F ) ) );
-          
-      end );
-      
-      AddProjectiveLift( Hom,
-        function ( eta_1, eta_2 )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, ProjectiveLift( ApplyFunctor( iso_1, eta_1 ), ApplyFunctor( iso_1, eta_2 ) ) );
-          
-      end );
-      
-      AddInjectiveColift( Hom,
-        function ( eta_1, eta_2 )
-          local iso_1, iso_2;
-          
-          iso_1 := IsomorphismOntoCategoryOfQuiverRepresentations( Hom );
-          
-          iso_2 := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
-          
-          return ApplyFunctor( iso_2, InjectiveColift( ApplyFunctor( iso_1, eta_1 ), ApplyFunctor( iso_1, eta_2 ) ) );
-          
-      end );
+        InjectiveEnvelope
+      );
       
     fi;
     
