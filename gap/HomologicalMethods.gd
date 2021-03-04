@@ -17,3 +17,9 @@ DeclareAttribute( "MorphismsFromDirectSumDecompositionOfProjectiveCover", IsCapC
 DeclareAttribute( "DirectSumDecompositionOfProjectiveObject", IsCapCategoryObjectInHomCategory );
 
 DeclareAttribute( "ProjectiveCover", IsCapCategoryObjectInHomCategory );
+
+DeclareAttribute( "MorphismsIntoDirectSumDecompositionOfInjectiveEnvelope", IsCapCategoryObjectInHomCategory );
+
+DeclareAttribute( "DirectSumDecompositionOfInjectiveObject", IsCapCategoryObjectInHomCategory );
+
+DeclareAttribute( "InjectiveEnvelope", IsCapCategoryObjectInHomCategory );

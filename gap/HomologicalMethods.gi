@@ -224,3 +224,31 @@ InstallMethod( DualOfMorphismInHomCategory,
     return D_eta;
     
 end );
+
+
+##
+InstallMethod( MorphismsIntoDirectSumDecompositionOfInjectiveEnvelope,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> List(
+            MorphismsFromDirectSumDecompositionOfProjectiveCover( DualOfObjectInHomCategory( F ) ),
+            DualOfMorphismInHomCategory
+          )
+);
+
+##
+InstallMethod( DirectSumDecompositionOfInjectiveObject,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> List(
+            DirectSumDecompositionOfProjectiveObject( DualOfObjectInHomCategory( F ) ),
+            DualOfMorphismInHomCategory
+          )
+);
+
+##
+InstallMethod( InjectiveEnvelope,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> DualOfMorphismInHomCategory( ProjectiveCover( DualOfObjectInHomCategory( F ) ) )
+);
