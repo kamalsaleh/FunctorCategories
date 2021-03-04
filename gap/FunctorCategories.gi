@@ -1558,22 +1558,24 @@ end );
 ##
 InstallMethod( IndecInjectiveObjects,
           [ IsCapHomCategory ],
-  function ( Hom )
-    local A, ii, iso;
+  function ( H )
+    local A, A_oid_op, H_op, indec_proj;
     
-    A := UnderlyingQuiverAlgebra( Source( Hom ) );
+    A := UnderlyingQuiverAlgebra( Source( H ) );
     
-    if not (IsMatrixCategory( Range( Hom ) ) and IsAdmissibleQuiverAlgebra( A )) then
+    if not (IsMatrixCategory( Range( H ) ) and IsAdmissibleQuiverAlgebra( A )) then
       
-      TryNextMethod();
+      TryNextMethod( );
       
     fi;
     
-    ii := IndecInjRepresentations( A );
+    A_oid_op := OppositeAlgebroidOverOppositeQuiverAlgebra( Source( H ) );
     
-    iso := IsomorphismFromCategoryOfQuiverRepresentations( Hom );
+    H_op := Hom( A_oid_op, Range( H ) );
     
-    return List( ii, i -> ApplyFunctor( iso, i ) );
+    indec_proj := IndecProjectiveObjects( H_op );
+    
+    return List( indec_proj, DualOfObjectInHomCategory );
     
 end );
 
