@@ -164,3 +164,63 @@ InstallMethod( ProjectiveCover,
     return pi_F;
     
 end );
+
+##
+InstallMethod( DualOfObjectInHomCategory,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  function( F )
+    local H, A_oid, kvec, A_oid_op, H_op, images_of_morphisms, D_F;
+    
+    H := CapCategory( F );
+    
+    A_oid := Source( H );
+    
+    kvec := Range( H );
+    
+    if not IsMatrixCategory( kvec ) then
+      
+      Error( "The range category should be a category of matrices" );
+      
+    fi;
+    
+    A_oid_op := OppositeAlgebroidOverOppositeQuiverAlgebra( A_oid );
+    
+    H_op := Hom( A_oid_op, kvec );
+    
+    images_of_morphisms := List( ValuesOnAllGeneratingMorphisms( F ), v -> TransposedMatrix( UnderlyingMatrix( v ) ) / kvec );
+    
+    D_F := AsObjectInHomCategory( A_oid_op, ValuesOnAllObjects( F ), images_of_morphisms );
+    
+    SetDualOfObjectInHomCategory( D_F, F );
+    
+    return D_F;
+    
+end );
+
+##
+InstallMethod( DualOfMorphismInHomCategory,
+          [ IsCapCategoryMorphismInHomCategory ],
+          
+  function( eta )
+    local F, G, H_op, A_oid_op, kvec, images_of_objects, D_eta;
+    
+    F := DualOfObjectInHomCategory( Source( eta ) );
+    
+    G := DualOfObjectInHomCategory( Range( eta ) );
+    
+    H_op := CapCategory( F );
+    
+    A_oid_op := Source( H_op );
+    
+    kvec := Range( H_op );
+    
+    images_of_objects := List( ValuesOnAllObjects( eta ), v -> TransposedMatrix( UnderlyingMatrix( v ) ) / kvec );
+    
+    D_eta := AsMorphismInHomCategory( G, images_of_objects, F );
+    
+    SetDualOfMorphismInHomCategory( D_eta, eta );
+    
+    return D_eta;
+    
+end );
