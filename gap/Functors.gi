@@ -255,6 +255,191 @@ InstallMethod( YonedaEmbedding,
 end );
 
 ##
+InstallMethod( YonedaIsomorphism,
+          [ IsAlgebroid ],
+  
+  function( algebroid )
+    local Y, indec_projs, name, Z;
+    
+    Y := YonedaEmbedding( algebroid );
+    
+    indec_projs := FullSubcategoryGeneratedByIndecProjectiveObjects( RangeOfFunctor( Y ) );
+    
+    name := "Yoneda isomorphism";
+    
+    Z := CapFunctor( name, algebroid, indec_projs );
+    
+    AddObjectFunction( Z, o -> AsSubcategoryCell( indec_projs, ApplyFunctor( Y, o ) ) );
+    
+    AddMorphismFunction( Z, { s, m, r } -> AsSubcategoryCell( indec_projs, ApplyFunctor( Y, m ) ) );
+    
+    return Z;
+    
+end );
+
+##
+InstallMethod( InverseOfYonedaIsomorphism,
+          [ IsAlgebroid ],
+          
+  function( algebroid )
+    local Y, indec_projs, name, object_func, morphism_func;
+    
+    Y := YonedaIsomorphism( algebroid );
+    
+    indec_projs := List( SetOfKnownObjects( RangeOfFunctor( Y ) ), UnderlyingCell );
+    
+    name := "Inverse of Yoneda isomorphism";
+    
+    object_func :=
+      function( P )
+        local i;
+        
+        P := UnderlyingCell( P );
+        
+        i := PositionProperty( indec_projs, Q -> ValuesOnAllObjects( Q ) = ValuesOnAllObjects( P ) );
+        
+        return ObjectInAlgebroid( algebroid, Vertex( UnderlyingQuiver( algebroid ), i ) );
+        
+      end;
+      
+    morphism_func :=
+      function( eta )
+        local s, r, B, YB, dim, rel;
+        
+        s := object_func( Source( eta ) );
+        
+        r := object_func( Range( eta ) );
+        
+        B := BasisOfExternalHom( s, r );
+        
+        YB := List( B, b -> UnderlyingCell( ApplyFunctor( Y, b ) ) );
+        
+        rel := Concatenation( [ UnderlyingCell( eta ) ], YB );
+        
+        rel := KernelEmbedding( MorphismBetweenDirectSums( List( rel, m -> [ HomStructure( m ) ] ) ) );
+        
+        rel := EntriesOfHomalgMatrixAsListList( UnderlyingMatrix( rel ) );
+        
+        if Size( rel ) > 1 then
+        
+          Error( "This should not happen!\n" );
+          
+        else
+          
+          rel := rel[ 1 ];
+          
+        fi;
+        
+        rel := AdditiveInverse( Inverse( rel[ 1 ] ) ) * rel;
+        
+        rel := rel{ [ 2 .. Size( B ) + 1 ] };
+        
+        if IsEmpty( rel ) then
+          
+          return ZeroMorphism( s, r );
+          
+        else
+          
+          return rel * B;
+          
+        fi;
+        
+      end;
+      
+    return FunctorFromLinearCategoryByTwoFunctions( name, RangeOfFunctor( Y ), algebroid, object_func, morphism_func );
+
+end );
+
+##
+InstallMethod( DecompositionFunctorOfProjectiveObjects,
+          [ IsCapHomCategory ],
+          
+  function( H )
+    local projs, indec_projs, indec_projs_plus, name, Dec;
+    
+    projs := FullSubcategoryGeneratedByProjectiveObjects( H );
+    
+    indec_projs := FullSubcategoryGeneratedByIndecProjectiveObjects( H );
+    
+    indec_projs_plus := AdditiveClosure( indec_projs );
+    
+    #DeactivateCachingOfCategory( indec_projs_plus );
+    
+    name := "Decomposition equivalence";
+    
+    Dec := CapFunctor( name, projs, indec_projs_plus );
+    
+    AddObjectFunction( Dec,
+      function( F )
+        local dec;
+        
+        dec := DirectSumDecompositionOfProjectiveObject( UnderlyingCell( F ) );
+        
+        if IsEmpty( dec ) then
+          
+          return ZeroObject( indec_projs_plus );
+          
+        else
+        
+          dec := List( dec, m -> AsSubcategoryCell( indec_projs, Source( m ) ) );
+        
+          return AdditiveClosureObject( dec, indec_projs_plus );
+          
+        fi;
+      
+    end );
+    
+    
+    AddMorphismFunction( Dec,
+      function( s, eta, r )
+        local dec_source, dec_range, iso_range, mat;
+         
+        if IsZeroForObjects( s ) or IsZeroForObjects( r ) then
+          
+          return ZeroMorphism( s, r );
+          
+        fi;
+        
+        eta := UnderlyingCell( eta );
+        
+        dec_source := DirectSumDecompositionOfProjectiveObject( Source( eta ) );
+        
+        dec_range := DirectSumDecompositionOfProjectiveObject( Range( eta ) );
+        
+        dec_range := List( dec_range, Source );
+        
+        iso_range := IsomorphismOntoDirectSumDecompositionOfProjectiveObject( Range( eta ) );
+        
+        if HasIsIdenticalToIdentityMorphism( iso_range ) and IsIdenticalToIdentityMorphism( iso_range ) then
+          
+          dec_range := List( [ 1 .. Size( dec_range ) ],
+                          i -> ProjectionInFactorOfDirectSumWithGivenDirectSum( dec_range, i, Range( iso_range ) )
+                        );
+                        
+        else
+          
+          dec_range := List( [ 1 .. Size( dec_range ) ],
+                          i -> PreCompose(
+                                  iso_range,
+                                  ProjectionInFactorOfDirectSumWithGivenDirectSum( dec_range, i, Range( iso_range ) )
+                              )
+                        );
+                        
+        fi;
+        
+        mat := List( dec_source, u -> List( dec_range, v -> PreCompose( [ u, eta, v ] ) ) );
+        
+        mat := List( mat, row -> List( row, m -> AsSubcategoryCell( indec_projs, m ) ) );
+        
+        return AdditiveClosureMorphism( s, mat, r );
+        
+    end );
+    
+    return Dec;
+    
+end );
+
+##
 InstallMethod( RadicalFunctorAttr,
           [ IsCapHomCategory ],
           

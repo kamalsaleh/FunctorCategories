@@ -87,6 +87,7 @@ Dependencies := rec(
                    [ "LinearAlgebraForCAP", ">= 2020.01.10" ],
                    [ "FreydCategoriesForCAP", ">= 2019.11.02" ],
                    [ "CategoryConstructor", ">= 2020.04.05" ],
+                   [ "SubcategoriesForCAP", ">= 2020.10-02" ]
                    ],
   SuggestedOtherPackages := [ ],
   ExternalConditions := [ ],

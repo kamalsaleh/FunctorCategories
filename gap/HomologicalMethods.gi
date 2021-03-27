@@ -133,6 +133,31 @@ InstallMethod( DirectSumDecompositionOfProjectiveObject,
 );
 
 ##
+InstallMethod( IsomorphismFromDirectSumDecompositionOfProjectiveObject,
+          [ IsCapCategoryObjectInHomCategory ],
+    
+  function( F )
+    local dec, P;
+    
+    dec := DirectSumDecompositionOfProjectiveObject( F );
+    
+    if IsEmpty( dec ) then
+      return IdentityMorphism( F );
+    else
+      P := DirectSum( List( dec, Source ) );
+      return MorphismBetweenDirectSums( P, TransposedMat( [ dec ] ), F );
+    fi;
+    
+end );
+
+##
+InstallMethod( IsomorphismOntoDirectSumDecompositionOfProjectiveObject,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> InverseImmutable( IsomorphismFromDirectSumDecompositionOfProjectiveObject( F ) )
+);
+
+##
 InstallMethod( ProjectiveCover,
           [ IsCapCategoryObjectInHomCategory ],
   function( F )
@@ -159,7 +184,13 @@ InstallMethod( ProjectiveCover,
     pi_F := MorphismBetweenDirectSums( D, TransposedMat( [ dec ] ), F );
     
     # Source( pi_F ) = D but they might not be identical gap objects, hence
-    SetMorphismsFromDirectSumDecompositionOfProjectiveCover( Source( pi_F ), m );
+    SetDirectSumDecompositionOfProjectiveObject( Source( pi_F ), m );
+    
+    m := IdentityMorphism( Source( pi_F ) );
+    SetIsIdenticalToIdentityMorphism( m, true );
+    
+    SetIsomorphismFromDirectSumDecompositionOfProjectiveObject( Source( pi_F ), m );
+    SetIsomorphismOntoDirectSumDecompositionOfProjectiveObject( Source( pi_F ), m );
     
     return pi_F;
     
@@ -251,4 +282,18 @@ InstallMethod( InjectiveEnvelope,
           [ IsCapCategoryObjectInHomCategory ],
           
   F -> DualOfMorphismInHomCategory( ProjectiveCover( DualOfObjectInHomCategory( F ) ) )
+);
+
+##
+InstallMethod( IsomorphismOntoDirectSumDecompositionOfInjectiveObject,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> DualOfMorphismInHomCategory( IsomorphismFromDirectSumDecompositionOfProjectiveObject( DualOfObjectInHomCategory( F ) ) )
+);
+
+##
+InstallMethod( IsomorphismFromDirectSumDecompositionOfInjectiveObject,
+          [ IsCapCategoryObjectInHomCategory ],
+          
+  F -> DualOfMorphismInHomCategory( IsomorphismOntoDirectSumDecompositionOfProjectiveObject( DualOfObjectInHomCategory( F ) ) )
 );

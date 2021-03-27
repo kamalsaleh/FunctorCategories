@@ -36,6 +36,12 @@ DeclareAttribute( "IsomorphismFromCategoryOfQuiverRepresentations", IsCapHomCate
 #! @Returns a &CAP; functor
 DeclareAttribute( "YonedaEmbedding", IsAlgebroid );
 
+DeclareAttribute( "YonedaIsomorphism", IsAlgebroid );
+
+DeclareAttribute( "InverseOfYonedaIsomorphism", IsAlgebroid );
+
+DeclareAttribute( "DecompositionFunctorOfProjectiveObjects", IsCapHomCategory );
+
 DeclareAttribute( "RadicalFunctorAttr", IsCapHomCategory );
 
 #! @Description

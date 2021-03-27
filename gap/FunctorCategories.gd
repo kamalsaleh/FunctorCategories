@@ -88,12 +88,24 @@ DeclareAttribute( "UnderlyingCapTwoCategoryCell",
 DeclareAttribute( "IndecProjectiveObjects",
         IsCapHomCategory );
 
+DeclareAttribute( "FullSubcategoryGeneratedByIndecProjectiveObjects",
+        IsCapHomCategory );
+
+DeclareAttribute( "FullSubcategoryGeneratedByProjectiveObjects",
+        IsCapHomCategory );
+
 #! @Description
 #!  The argument is a category of functors <A>Hom</A> into some matrix category of a homalg field.
 #!  The output is the list of indecomposable injective objects in <A>Hom</A> up to isomorphism.
 #! @Arguments Hom
 #! @Returns a list
 DeclareAttribute( "IndecInjectiveObjects",
+        IsCapHomCategory );
+
+DeclareAttribute( "FullSubcategoryGeneratedByIndecInjectiveObjects",
+        IsCapHomCategory );
+
+DeclareAttribute( "FullSubcategoryGeneratedByInjectiveObjects",
         IsCapHomCategory );
 
 #! @Description
